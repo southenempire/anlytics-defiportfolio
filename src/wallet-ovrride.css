@@ -1,0 +1,156 @@
+/* wallet-override-bw-theme.css */
+
+/* Main Modal Container */
+.wallet-adapter-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+.wallet-adapter-modal-wrapper {
+    background-color: #fff !important;
+    padding: 2rem !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    max-width: 28rem !important;
+    width: 100% !important;
+    border: 1px solid #e5e7eb !important;
+    position: relative !important;
+}
+
+/* Close Button */
+.wallet-adapter-modal-button-close {
+    position: absolute !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    color: #6b7280 !important;
+    transition: all 0.2s !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0.5rem !important;
+    border-radius: 50% !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.wallet-adapter-modal-button-close:hover {
+    color: #000 !important;
+    background-color: #f3f4f6 !important;
+}
+
+/* Title */
+.wallet-adapter-modal-title {
+    color: #000 !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    margin-bottom: 1.5rem !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Wallet List */
+.wallet-adapter-modal-list {
+    margin: 1.5rem 0 0 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    gap: 0.75rem !important;
+}
+
+/* Wallet Buttons - Gray-800 (#1f2937) */
+.wallet-adapter-button {
+    background-color: #1f2937 !important;
+    color: #fff !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid #1f2937 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.wallet-adapter-button:hover {
+    background-color: #111827 !important;
+    border-color: #111827 !important;
+}
+
+.wallet-adapter-button:active {
+    background-color: #374151 !important;
+}
+
+/* Wallet Icons */
+.wallet-adapter-button-start-icon {
+    margin-right: 0.75rem !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+/* Connect Button (Trigger) - Also Gray-800 */
+.wallet-adapter-button-trigger {
+    background-color: #1f2937 !important;
+    color: #fff !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    border: 1px solid #1f2937 !important;
+}
+
+.wallet-adapter-button-trigger:hover {
+    background-color: #111827 !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    .wallet-adapter-modal-wrapper {
+        padding: 1.5rem !important;
+        margin: 0 1rem !important;
+        max-width: calc(100% - 2rem) !important;
+    }
+    
+    .wallet-adapter-button {
+        padding: 0.875rem !important;
+    }
+    
+    .wallet-adapter-modal-title {
+        font-size: 1.15rem !important;
+    }
+}
+
+/* Loading State */
+.wallet-adapter-button-loading {
+    position: relative !important;
+    color: transparent !important;
+}
+
+.wallet-adapter-button-loading:after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.wallet-adapter-modal-error-message {
+    color: #000 !important;
+    background-color: #fee2e2 !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    font-size: 0.875rem !important;
+    text-align: center !important;
+    border-left: 3px solid #ef4444 !important;
+}
