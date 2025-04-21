@@ -6,11 +6,11 @@ import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [ tailwindcss(), react()],
   define: {
     'process.env': {},
-    global: {}
+    'global': 'globalThis',
   },
+  plugins: [ tailwindcss(), react()],
   optimizeDeps: {
     esbuildOptions: {
       define: {
