@@ -137,7 +137,7 @@
 //   })();
 
 // web3plugin/validators.ts
-interface Validator {
+export interface Validator {
   votePubkey: string;
   nodePubkey: string;
   activatedStake: number;

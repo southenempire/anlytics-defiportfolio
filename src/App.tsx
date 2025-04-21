@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import Navbar from './component/Navbar';
-import Home from './component/home';
+import Login from './component/Login';
 import './App.css';
 import './wallet-ovrride.css';
 import Dashboard from './component/dashboard';
@@ -8,59 +8,71 @@ import Tradetoken from './component/tokenlist';
 import TokenDetailsWithSwap from './component/tradetoken/page';
 import WalletConnectionProvider from './WalletAdapter/page';
 import { Buffer } from "buffer";
-import { useWallet } from '@solana/wallet-adapter-react';
 import ValidatorsList from './component/validatorlist';
 import ValidatorDetails from './component/validatordetails/page';
-import { useEffect } from 'react';
+import { CivicAuthProvider, useUser } from '@civic/auth-web3/react';
+import '@solana/wallet-adapter-react-ui/styles.css';
+import UserProfile from './component/Profile';
+import WalletPortfolio from './component/watchwallet/page';
 
 (window as any).Buffer = Buffer;
 
 function ProtectedRoute() {
-  const { connected } = useWallet();
+  const { user } = useUser();
   const location = useLocation();
 
-  if (!connected) {
+  if (!user) {
     return <Navigate to="/" replace state={{ from: location }} />;
   }
 
   return <Outlet />;
 }
 
-function HomeRedirect() {
-  const { connected } = useWallet();
+function Layout() {
   const location = useLocation();
 
-  // If connected and on home page, redirect to portfolio
-  if (connected && location.pathname === '/') {
-    return <Navigate to="/portfolio" replace />;
-  }
-
-  return <Home />;
+  return (
+    <div className="min-h-screen bg-white">
+      {location.pathname !== '/' && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Login />} />
+        
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/portfolio" element={<Dashboard />} />
+          <Route path="/validators" element={<ValidatorsList />} />
+          <Route path="/validator/:nodePubkey" element={<ValidatorDetails />} />
+          <Route path="/token" element={<Tradetoken />} />
+          <Route path="/swap" element={<TokenDetailsWithSwap />} />
+          <Route path='/profile' element={<UserProfile />} />
+          <Route path='/watch-wallet' element={<WalletPortfolio />} />
+        </Route>
+        
+        {/* Fallback to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  );
 }
 
 function App() {
   return (
     <WalletConnectionProvider>
-      <Router>
-        <div className="min-h-screen bg-white">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<HomeRedirect />} />
-            
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/portfolio" element={<Dashboard />} />
-              <Route path="/validators" element={<ValidatorsList />} />
-              <Route path="/validator/:nodePubkey" element={<ValidatorDetails />} />
-              <Route path="/token" element={<Tradetoken />} />
-              <Route path="/swap" element={<TokenDetailsWithSwap />} />
-            </Route>
-            
-            {/* Fallback redirect */}
-            <Route path="*" element={<Navigate to="/portfolio" replace />} />
-          </Routes>
-        </div>
-      </Router>
+      <CivicAuthProvider
+        clientId={import.meta.env.VITE_CIVIC_CLIENT_ID}
+        displayMode="iframe"
+        onSignIn={(error: any) => {
+          if (error) {
+            console.error("Sign in error:", error);
+          } else {
+            console.log("Sign in successful");
+          }
+        }}
+      >
+        <Router>
+          <Layout />
+        </Router>
+      </CivicAuthProvider>
     </WalletConnectionProvider>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import BalanceCard from './pulgin/balancecard';
 import TokenCardTable from './pulgin/tokentable';
+import SolanaTokenMetadata from './solanatokenmetadata/page';
 
 function Tradetoken() {
     return (
@@ -13,6 +14,9 @@ function Tradetoken() {
             <div className="max-w-7xl mx-auto">
                 <div className="mb-6">
                     <BalanceCard />
+                </div>
+                <div>
+                    <SolanaTokenMetadata/>
                 </div>
                 <div>
                     <TokenCardTable />

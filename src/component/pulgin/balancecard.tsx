@@ -4,7 +4,11 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import { getSolBalance, getSolPriceInUSD, getTokenAccounts, getStakeAccounts } from '../web3plugin/portfolio';
 
-const BalanceCard = () => {
+interface BalanceCardProps {
+  address?: string;  // Make address optional
+}
+
+const BalanceCard = ({ address }: BalanceCardProps) => {
   const { publicKey, connected } = useWallet();
   const [balanceData, setBalanceData] = useState({
     netWorth: 0,

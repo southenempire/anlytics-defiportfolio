@@ -113,22 +113,23 @@ const Dashboard = () => {
             setTransactions([]);
             return;
         }
-
+    
         try {
             if (transactionCache.current.length === 0) {
                 setTxLoading(true);
             }
             setTxError(null);
-
+    
             const connection = new Connection(import.meta.env.VITE_RPC_ENDPOINT);
-            const txData = await fetchTransactions(connection, 5);
-
+            // Provide publicKey as the third argument and undefined for the fourth if optional
+            const txData = await fetchTransactions(connection, 5, publicKey.toString(), undefined);
+    
             transactionCache.current = txData;
             setTransactions(txData);
         } catch (error) {
             console.error('Error fetching transactions:', error);
             setTxError('Failed to load transactions. You may be rate limited - please try again later.');
-
+    
             if (transactionCache.current.length > 0) {
                 setTransactions(transactionCache.current);
             }
@@ -305,3 +306,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@civic/auth-web3": "^0.5.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@metaplex/js": "^4.12.0",
     "@solana/spl-token": "^0.4.13",
@@ -23,6 +24,7 @@
     "esrun": "^3.2.26",
     "lucide-react": "^0.484.0",
     "node-fetch": "^3.3.2",
+    "p-limit": "^6.2.0",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",

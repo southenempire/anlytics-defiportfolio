@@ -1,18 +1,28 @@
+// src/component/Navbar.tsx
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ChevronDown, Search } from 'lucide-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
     const navItems = [
         { label: 'Portfolio', to: '/portfolio' },
         { label: 'Pump Fun', to: '/token' },
         { label: 'Validators', to: '/validators' },
-        { label: 'Learn', to: '/learn' }
-      
+        { label: 'Profile', to: '/profile' },
+        { label: 'watch-wallet', to: '/watch-wallet' } // Fixed: changed 'Label' to 'label'
     ];
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/watch?address=${searchQuery.trim()}`);
+            setSearchQuery('');
+        }
+    };
 
     return (
         <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -26,7 +36,8 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Desktop Navigation - Always Visible on Laptop */}
+
+                    {/* Desktop Navigation */}
                     <div className="hidden lg:flex space-x-4 items-center">
                         {navItems.map((item) => (
                             <Link
@@ -49,12 +60,28 @@ const Navbar = () => {
                         </button>
                     </div>
 
+
+
+                    {/* Search Field - Desktop */}
+                    <div className="hidden lg:flex mx-4 flex-1 max-w-md">
+                        <form onSubmit={handleSearch} className="w-full">
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Search className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search Solana address..."
+                                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+                        </form>
+                    </div>
+
                     {/* Right Side Buttons */}
                     <div className="hidden lg:flex items-center space-x-4">
-                        {/* <div className="text-gray-800 mr-2">
-                            © KMNO
-                        </div> */}
-
                         <WalletMultiButton />
                     </div>
                 </div>
@@ -62,6 +89,24 @@ const Navbar = () => {
                 {/* Mobile Dropdown Menu */}
                 {isDropdownOpen && (
                     <div className="lg:hidden absolute left-0 right-0 bg-white shadow-lg">
+                        {/* Mobile Search Field */}
+                        <div className="px-4 py-3">
+                            <form onSubmit={handleSearch} className="w-full">
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Search className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search Solana address..."
+                                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                </div>
+                            </form>
+                        </div>
+
                         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                             {navItems.map((item) => (
                                 <Link
@@ -75,9 +120,6 @@ const Navbar = () => {
                             ))}
                         </div>
                         <div className="px-4 py-3 border-t border-gray-200 flex justify-between items-center">
-                            {/* <div className="text-gray-800">
-                                © KMNO
-                            </div> */}
                             <WalletMultiButton />
                         </div>
                     </div>
