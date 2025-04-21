@@ -155,8 +155,11 @@ export interface Validator {
   score?: number;
 }
 
-const RPC_URL = 'https://mainnet.helius-rpc.com/?api-key=53b061f7-82e6-4436-a39e-fe1cbfdf0394';
+const RPC_URL = import.meta.env.VITE_RPC_ENDPOINT;
 const SOLANA_MAINNET_API = 'https://api.solanamainetbeta/validator';
+
+
+
 
 async function fetchValidatorData(nodePubkey: string): Promise<any> {
   try {
@@ -200,6 +203,9 @@ function calculateEstimatedAPY(commission: number): number {
 
 export async function fetchSolanaValidators(limit: number = 10): Promise<Validator[]> {
   try {
+    if (!RPC_URL) {
+      throw new Error("SOLANA_MAINNET environment variable is not defined");
+    }
     console.log('[1/3] Fetching base validator data from Solana RPC...');
     const voteResponse = await fetch(RPC_URL, {
       method: 'POST',
@@ -249,6 +255,9 @@ export async function fetchSolanaValidators(limit: number = 10): Promise<Validat
 
 export async function fetchValidatorDetails(nodePubkey: string): Promise<Validator> {
   try {
+    if (!RPC_URL) {
+      throw new Error("SOLANA_MAINNET environment variable is not defined");
+    }
     console.log('[1/2] Fetching base validator data from Solana RPC...');
     const voteResponse = await fetch(RPC_URL, {
       method: 'POST',

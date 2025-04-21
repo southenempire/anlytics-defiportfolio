@@ -6,17 +6,26 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 
 const STAKE_PROGRAM_ID = new PublicKey('Stake11111111111111111111111111111111111111');
-const SOLANA_MAINNET = 'https://mainnet.helius-rpc.com/?api-key=4c4a4f43-145d-4406-b89c-36ad977bb738';
-const SOLANA_USD_API = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd';
+const SOLANA_MAINNET = import.meta.env.VITE_RPC_ENDPOINT;
+const SOLANA_USD_API = import.meta.env.VITE_SOLANA_USD_API;
+
+if (!SOLANA_MAINNET) {
+    throw new Error("SOLANA_MAINNET environment variable is not defined");
+}
+
+
 
 const connection = new Connection(SOLANA_MAINNET);
 
 export async function getSolBalance(address: PublicKey, _conn: Connection) {
     const balance = await connection.getBalance(address);
-    return balance / 1e9; 
+    return balance / 1e9;
 }
 
 export async function getSolPriceInUSD() {
+    if (!SOLANA_USD_API) {
+        throw new Error("VITE_SOLANA_USD_API environment variable is not defined");
+    }
     try {
         const response = await axios.get(SOLANA_USD_API);
         return response.data.solana.usd;

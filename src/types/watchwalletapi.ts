@@ -28,7 +28,11 @@ export interface NativeBalance {
     tokens: Token[];
   }
   
-  const MORALIS_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjI4ZjdlNzM2LTg4Y2QtNGVmMS04MTdiLWJkOTNmZmZiYzlhMCIsIm9yZ0lkIjoiMjA3MjU1IiwidXNlcklkIjoiMjA2OTI3IiwidHlwZUlkIjoiMzg3Y2NhMmItZGM2ZC00NjU0LTljNGUtM2JjYjYzNmY1NjI5IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MzgzNjM2OTAsImV4cCI6NDg5NDEyMzY5MH0.DdmO41tfgrH6FiCEuUkyJOoUFPRQD9vlaUhrmIXAVnQ';
+  const MORALIS_API_KEY = import.meta.env.VITE_MORALIS_API;
+
+  if (!MORALIS_API_KEY) {
+    throw new Error("VITE_MORALIS_API environment variable is not defined");
+  }
   
   // Self-contained fetch helper
   const fetchWithMoralis = async (url: string, options: RequestInit = {}) => {

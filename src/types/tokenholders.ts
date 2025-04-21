@@ -30,7 +30,11 @@ export interface TokenHolderDistribution {
     percentage: number;
   }
   
-  const MORALIS_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjI4ZjdlNzM2LTg4Y2QtNGVmMS04MTdiLWJkOTNmZmZiYzlhMCIsIm9yZ0lkIjoiMjA3MjU1IiwidXNlcklkIjoiMjA2OTI3IiwidHlwZUlkIjoiMzg3Y2NhMmItZGM2ZC00NjU0LTljNGUtM2JjYjYzNmY1NjI5IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MzgzNjM2OTAsImV4cCI6NDg5NDEyMzY5MH0.DdmO41tfgrH6FiCEuUkyJOoUFPRQD9vlaUhrmIXAVnQ';
+  const MORALIS_API_KEY = import.meta.env.VITE_MORALIS_API;
+
+  if (!MORALIS_API_KEY) {
+    throw new Error("VITE_MORALIS_API environment variable is not defined");
+  }
   
   // Helper for fetching that works in both browser and Node.js environments
   const customFetch = async (url: string, options: RequestInit) => {
@@ -95,29 +99,35 @@ export interface TokenHolderDistribution {
     };
   };
   
-  export async function fetchTokenHolderDistribution(tokenAddress: string): Promise<TokenHolderDistribution> {
+  export async function fetchTokenHolderDistribution(
+    tokenAddress: string
+  ): Promise<TokenHolderDistribution> {
+    if (!MORALIS_API_KEY) {
+      throw new Error("VITE_MORALIS_API environment variable is not defined");
+    }
+  
     const options = {
       method: 'GET',
       headers: {
         accept: 'application/json',
-        'X-API-Key': MORALIS_API_KEY
+        'X-API-Key': MORALIS_API_KEY, // Now definitely a string
       },
     };
-    
+  
     try {
-      // Attempt to fetch data from Moralis API
-      const response = await customFetch(`https://solana-gateway.moralis.io/token/mainnet/holders/${tokenAddress}`, options);
+      const response = await customFetch(
+        `https://solana-gateway.moralis.io/token/mainnet/holders/${tokenAddress}`,
+        options
+      );
       
       if (!response.ok) {
         console.warn(`Moralis API returned status ${response.status} for token ${tokenAddress}`);
-        // If API fails, return simulated data instead of throwing
         return simulateDistributionData(tokenAddress);
       }
       
-      return await response.json() as TokenHolderDistribution;
+      return (await response.json()) as TokenHolderDistribution;
     } catch (error) {
       console.error("Error fetching token holder distribution:", error);
-      // Return simulated data on error
       return simulateDistributionData(tokenAddress);
     }
   }
