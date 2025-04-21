@@ -10,6 +10,7 @@ import WalletConnectionProvider from './WalletAdapter/page';
 import { Buffer } from "buffer";
 import ValidatorsList from './component/validatorlist';
 import ValidatorDetails from './component/validatordetails/page';
+import WatchAddress from './component/watchaddr';
 import { CivicAuthProvider, useUser } from '@civic/auth-web3/react';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import UserProfile from './component/Profile';
@@ -47,6 +48,7 @@ function Layout() {
           <Route path='/profile' element={<UserProfile />} />
           <Route path='/watch-wallet' element={<WalletPortfolio />} />
         </Route>
+        <Route path="/watch" element={<WatchAddress />} />
         
         {/* Fallback to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
