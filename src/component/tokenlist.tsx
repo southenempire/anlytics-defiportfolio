@@ -1,4 +1,3 @@
-import React from 'react';
 import BalanceCard from './pulgin/balancecard';
 import TokenCardTable from './pulgin/tokentable';
 import SolanaTokenMetadata from './solanatokenmetadata/page';

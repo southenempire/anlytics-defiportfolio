@@ -8,7 +8,7 @@ interface BalanceCardProps {
   address?: string;  // Make address optional
 }
 
-const BalanceCard = ({ address }: BalanceCardProps) => {
+const BalanceCard = ({  }: BalanceCardProps) => {
   const { publicKey, connected } = useWallet();
   const [balanceData, setBalanceData] = useState({
     netWorth: 0,

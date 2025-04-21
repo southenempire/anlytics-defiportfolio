@@ -84,7 +84,7 @@ export const useFetchTransactions = () => {
   };
 
   const fetchTransactions = async (
-connection: Connection, limit: number = 10, pubkey: unknown, p0: string | undefined): Promise<SimplifiedTransactionDetail[]> => {
+connection: Connection, limit: number = 10, _pubkey: unknown, _p0: string | undefined): Promise<SimplifiedTransactionDetail[]> => {
     if (!publicKey) {
       throw new Error("Wallet not connected");
     }
