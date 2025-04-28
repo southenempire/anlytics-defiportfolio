@@ -22,22 +22,22 @@ export default function Login() {
 
   useEffect(() => {
     const createWallet = async () => {
-      if (user && !('solana' in user)) {
-        try {
-          setIsCreating(true);
+      setIsCreating(true);  
+      try {
+        if (user && !('solana' in user)) {
           const civicUser = user as any;
           if (civicUser.createWallet) {
             await civicUser.createWallet();
             console.log("Wallet created successfully");
           }
-        } catch (error) {
-          console.error("Wallet creation failed:", error);
-        } finally {
-          setIsCreating(false);
         }
+      } catch (error) {
+        console.error("Wallet creation failed:", error);
+      } finally {
+        setIsCreating(false); 
       }
     };
-
+  
     if (user) {
       createWallet();
       navigate("/portfolio");
@@ -45,22 +45,22 @@ export default function Login() {
   }, [user, navigate]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg bg-white border border-gray-200 rounded-xl shadow-lg p-10">
-        <h1 className="text-3xl font-bold text-black text-center mb-2">
+    <div className="flex justify-center items-center min-h-screen bg-gray-800">
+      <div className="w-full max-w-lg bg-gray-900 bg-opacity-90 border border-gray-800 rounded-xl shadow-lg p-10">
+        <h1 className="text-3xl font-bold text-white text-center mb-4">
           Welcome to Web3 Portfolio
         </h1>
-        <p className="text-gray-500 text-center mb-8">
+        <p className="text-gray-400 text-center mb-8">
           Sign in with your email to manage your portfolio and explore tokens.
         </p>
         {!user ? (
           <button
             onClick={handleSignIn}
             disabled={isSigningIn || isCreating}
-            className={`w-full py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center
+            className={`w-full py-3 px-4 rounded-lg font-medium text-white text-sm transition-all flex items-center justify-center
               ${isSigningIn || isCreating 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-black text-white hover:bg-gray-800'}`}
+                ? 'bg-gray-600 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'}`}
           >
             {isSigningIn ? (
               <>
@@ -115,8 +115,8 @@ export default function Login() {
             )}
           </button>
         ) : (
-          <div className="w-full flex justify-center">
-            <WalletMultiButton className="!bg-black !text-white hover:!bg-gray-800 !py-3 !rounded-lg" />
+          <div className="w-full flex justify-center mt-4">
+            <WalletMultiButton className="!bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 !text-white !py-3 !rounded-lg" />
           </div>
         )}
       </div>

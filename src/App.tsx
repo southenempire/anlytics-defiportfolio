@@ -15,6 +15,7 @@ import { CivicAuthProvider, useUser } from '@civic/auth-web3/react';
 import '@solana/wallet-adapter-react-ui/styles.css';
 import UserProfile from './component/Profile';
 import WalletPortfolio from './component/watchwallet/page';
+import UrlVerifier from './component/Dapps/page';
 
 (window as any).Buffer = Buffer;
 
@@ -47,6 +48,7 @@ function Layout() {
           <Route path="/swap" element={<TokenDetailsWithSwap />} />
           <Route path='/profile' element={<UserProfile />} />
           <Route path='/watch-wallet' element={<WalletPortfolio />} />
+          <Route path='/dapps' element={<UrlVerifier />} />
         </Route>
         <Route path="/watch" element={<WatchAddress />} />
         

@@ -4,21 +4,58 @@ import {
   DollarSign,
   PieChart,
   TrendingUp,
-  CheckCircle,
-  Circle,
-  ArrowRight,
-  ChevronDown,
-  ArrowLeft
+  // CheckCircle,
+  // Circle,
+  ArrowLeft,
+  AlertCircle,
+  Loader
 } from 'lucide-react';
 import { useTokenMetadata } from '../../hooks/useTokenMetadata';
 import MetadataDisplay from './bubblemapstokendisplay/matadataDisplay';
 import { TokenDetails } from '../../types/bubblemap';
+
+interface JupiterInterface {
+  init: (config: any) => void;
+  _instance: any;
+}
+
+declare global {
+  interface Window {
+    Jupiter?: JupiterInterface;
+  }
+}
 
 function TokenDetailsWithSwap() {
   const location = useLocation();
   const navigate = useNavigate();
   const [token, setToken] = useState<TokenDetails | null>(null);
   const { metadata, loading, error } = useTokenMetadata(token?.address || null);
+
+  useEffect(() => {
+    if (window.Jupiter && token?.address) {
+      window.Jupiter.init({
+        displayMode: "integrated",
+        integratedTargetId: "integrated-terminal",
+        endpoint: "https://mainnet.helius-rpc.com/?api-key=4c4a4f43-145d-4406-b89c-36ad977bb738",
+        defaultExplorer: "Solscan",
+        formProps: {
+          initialOutputMint: token.address,
+          initialInputMint: "So11111111111111111111111111111111111111112",
+          fixedOutputMint: true
+        }
+      });
+    }
+
+    return () => {
+      if (window.Jupiter) {
+        window.Jupiter._instance = null;
+        const terminalElement = document.getElementById('integrated-terminal');
+        if (terminalElement) {
+          terminalElement.innerHTML = '';
+        }
+      }
+    };
+  }, [token?.address]);
 
   useEffect(() => {
     if (location.state?.token) {
@@ -30,38 +67,49 @@ function TokenDetailsWithSwap() {
 
   if (!token) {
     return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        Loading token details...
+      <div className="bg-gray-900 text-gray-100 min-h-screen p-6 flex items-center justify-center">
+        <div className="max-w-md mx-auto bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+          <Loader className="animate-spin mx-auto text-purple-500" size={24} />
+          <p className="mt-4 text-gray-300">Loading token details...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center text-gray-600 hover:text-gray-800 mb-4 transition-colors"
-      >
-        <ArrowLeft className="mr-1" size={18} />
-        Back to tokens
-      </button>
+    <div className="bg-gray-900 text-gray-100 min-h-screen p-6">
+      <div className="max-w-6xl mx-auto">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-purple-400 hover:text-purple-300 mb-6 transition-colors"
+        >
+          <ArrowLeft className="mr-2" size={18} />
+          Back to tokens
+        </button>
 
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex items-center gap-3 mb-6">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+            Token Details & Swap
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Token Details Card */}
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Token Details</h2>
+          <div className="bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-6">
+            <h2 className="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
+              Token Information
+            </h2>
 
             <div className="flex items-center mb-6">
               <img
                 src={token.logo}
                 alt={`${token.name} logo`}
-                className="w-12 h-12 rounded-full mr-4 border border-gray-300"
+                className="w-12 h-12 rounded-full mr-4 border border-purple-500/30"
               />
               <div>
-                <h3 className="text-lg font-bold text-gray-800">{token.name}</h3>
-                <p className="text-sm text-gray-500">{token.symbol}</p>
-                <p className="text-sm text-gray-500 truncate max-w-[180px] md:max-w-[220px]">
+                <h3 className="text-lg font-bold text-gray-100">{token.name}</h3>
+                <p className="text-sm text-purple-400">{token.symbol}</p>
+                <p className="text-xs text-gray-400 truncate max-w-[180px] md:max-w-[220px]">
                   {token.address}
                 </p>
               </div>
@@ -69,31 +117,31 @@ function TokenDetailsWithSwap() {
 
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 flex items-center">
+                <span className="text-gray-400 flex items-center">
                   <DollarSign className="mr-2" size={16} />
-                  <span className="hidden sm:inline">Price (SOL)</span>
+                  Price (SOL)
                 </span>
-                <span className="font-medium text-gray-800">
+                <span className="font-medium text-gray-100">
                   {token.priceNative}
                 </span>
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 flex items-center">
+                <span className="text-gray-400 flex items-center">
                   <DollarSign className="mr-2" size={16} />
-                  <span className="hidden sm:inline">Price (USD)</span>
+                  Price (USD)
                 </span>
-                <span className="font-medium text-gray-800">
+                <span className="font-medium text-gray-100">
                   ${token.price.toFixed(token.price > 1 ? 2 : 4)}
                 </span>
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 flex items-center">
+                <span className="text-gray-400 flex items-center">
                   <PieChart className="mr-2" size={16} />
-                  <span className="hidden sm:inline">Liquidity</span>
+                  Liquidity
                 </span>
-                <span className="font-medium text-gray-800">
+                <span className="font-medium text-gray-100">
                   {token.liquidity >= 1000000
                     ? `$${(token.liquidity / 1000000).toFixed(1)}M`
                     : `$${(token.liquidity / 1000).toFixed(1)}K`}
@@ -101,133 +149,71 @@ function TokenDetailsWithSwap() {
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 flex items-center">
+                <span className="text-gray-400 flex items-center">
                   <TrendingUp className="mr-2" size={16} />
-                  <span className="hidden sm:inline">FDV</span>
+                  FDV
                 </span>
-                <span className="font-medium text-gray-800">
+                <span className="font-medium text-gray-100">
                   {token.fdv >= 1000000
                     ? `$${(token.fdv / 1000000).toFixed(1)}M`
                     : `$${(token.fdv / 1000).toFixed(1)}K`}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Status</span>
+              {/* <div className="flex justify-between items-center">
+                <span className="text-gray-400">Status</span>
                 <div className="flex items-center">
                   {token.status === 'Good' ? (
-                    <CheckCircle className="mr-1 text-green-500" size={16} />
+                    <CheckCircle className="mr-1 text-green-400" size={16} />
                   ) : (
-                    <Circle className="mr-1 text-red-500" size={16} />
+                    <Circle className="mr-1 text-red-400" size={16} />
                   )}
-                  <span className={`font-medium ${token.status === 'Good' ? 'text-green-500' : 'text-red-500'}`}>
+                  <span className={`font-medium ${token.status === 'Good' ? 'text-green-400' : 'text-red-400'}`}>
                     {token.status}
                   </span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          {/* Swap UI Card */}
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Swap Tokens</h2>
-
-            <div className="space-y-4">
-              {/* From Input */}
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="flex justify-between mb-2 text-sm sm:text-base">
-                  <span className="text-gray-600">From</span>
-                  <span className="text-gray-600">Balance: 0.0</span>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="number"
-                    placeholder="0.0"
-                    className="flex-1 bg-transparent text-xl sm:text-2xl outline-none"
-                  />
-                  <button className="flex items-center bg-gray-100 hover:bg-gray-200 rounded-lg px-2 sm:px-3 py-1 sm:py-2 transition-colors text-sm sm:text-base">
-                    <img
-                      src={token.logo}
-                      alt={`${token.name} logo`}
-                      className="w-5 h-5 sm:w-6 sm:h-6 rounded-full mr-1 sm:mr-2"
-                    />
-                    <span className="truncate max-w-[60px] sm:max-w-none">{token.symbol}</span>
-                    <ChevronDown className="ml-1" size={16} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Swap Arrow */}
-              <div className="flex justify-center">
-                <button className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors">
-                  <ArrowRight size={20} />
-                </button>
-              </div>
-
-              {/* To Input */}
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="flex justify-between mb-2 text-sm sm:text-base">
-                  <span className="text-gray-600">To</span>
-                  <span className="text-gray-600">Balance: 0.0</span>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="number"
-                    placeholder="0.0"
-                    className="flex-1 bg-transparent text-xl sm:text-2xl outline-none"
-                  />
-                  <button className="flex items-center bg-gray-100 hover:bg-gray-200 rounded-lg px-2 sm:px-3 py-1 sm:py-2 transition-colors text-sm sm:text-base">
-                    <span className="mr-1 sm:mr-2 truncate max-w-[40px] sm:max-w-none">Select</span>
-                    <ChevronDown size={16} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Swap Button */}
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 sm:py-3 px-4 rounded-xl transition-colors text-sm sm:text-base">
-                Swap
-              </button>
-
-              {/* Price Info */}
-              <div className="bg-gray-50 rounded-xl p-3 sm:p-4 text-xs sm:text-sm text-gray-600">
-                <div className="flex justify-between mb-1">
-                  <span>Price</span>
-                  <span className="truncate max-w-[150px] sm:max-w-none">1 {token.symbol} = {token.priceNative} SOL</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Slippage</span>
-                  <span>0.5%</span>
-                </div>
-              </div>
-            </div>
+          {/* Jupiter Terminal Integration */}
+          <div className="bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-6">
+            <h2 className="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
+              <TrendingUp size={18} className="text-blue-400" />
+              Swap Tokens
+            </h2>
+            <div 
+              id="integrated-terminal" 
+              className="rounded-lg overflow-hidden border border-gray-700"
+              style={{ width: '100%', height: '500px' }}
+            ></div>
           </div>
         </div>
 
-
         {/* Bubblemaps Metadata Display */}
-        <div className="mt-8">
+        <div className="mb-8">
+          <h2 className="text-lg font-bold text-gray-200 mb-4 flex items-center gap-2">
+            <PieChart size={18} className="text-purple-400" />
+            Token Distribution
+          </h2>
+
           {loading && (
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 text-center">
-              <div className="flex justify-center items-center space-x-2">
-                <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
+            <div className="bg-gray-800 border border-gray-700 rounded-xl shadow-lg p-6 text-center">
+              <div className="flex justify-center items-center gap-2 text-gray-400">
+                <Loader className="animate-spin" size={18} />
                 <span>Loading token distribution data...</span>
               </div>
             </div>
           )}
 
           {error && (
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 text-center">
-              <div className="text-red-500 mb-2">
-                <svg className="w-6 h-6 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="bg-red-900/30 border border-red-800 rounded-xl p-6">
+              <div className="flex items-center gap-2 text-red-400 mb-2">
+                <AlertCircle size={18} />
+                <h3 className="font-medium">Couldn't load data</h3>
               </div>
-              <h3 className="font-medium text-gray-900">Couldn't load data</h3>
-              <p className="text-gray-600 mt-1">We're having trouble loading the distribution information.</p>
-              <p className="text-gray-500 text-sm mt-2">Technical details: {error}</p>
+              <p className="text-gray-300 mt-1">We're having trouble loading the distribution information.</p>
+              <p className="text-gray-400 text-sm mt-2">Technical details: {error}</p>
             </div>
           )}
 

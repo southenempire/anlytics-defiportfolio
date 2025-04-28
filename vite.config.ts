@@ -71,6 +71,15 @@ export default defineConfig({
       ],
     },
   },
+  server: {
+    proxy: {
+      '/api/webacy': {
+        target: 'http://localhost:5173', // Vite dev server
+        changeOrigin: true,
+        // No rewrite needed since the path matches
+      },
+    },
+  },
   resolve: {
     alias: {
       buffer: 'buffer',
