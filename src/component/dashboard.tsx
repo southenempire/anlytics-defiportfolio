@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Connection } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Shield, PieChart, Activity, Coins, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
+import {  PieChart, Activity, Coins, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
 import { getSolBalance, getTokenAccounts, getStakeAccounts } from './web3plugin/portfolio';
 import { useFetchTransactions, SimplifiedTransactionDetail } from './web3plugin/fetchtransaction';
 import BalanceCard from './pulgin/balancecard';
