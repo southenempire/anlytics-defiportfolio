@@ -1,7 +1,7 @@
 // src/component/Navbar.tsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, Search, Shield } from 'lucide-react';
+import { ChevronDown, Search} from 'lucide-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 const Navbar = () => {
