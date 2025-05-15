@@ -6,6 +6,7 @@ import { getSolBalance, getTokenAccounts, getStakeAccounts } from './web3plugin/
 import { useFetchTransactions, SimplifiedTransactionDetail } from './web3plugin/fetchtransaction';
 import BalanceCard from './pulgin/balancecard';
 import MultiColorProgressBar from './pulgin/progressbar/page';
+import BlazeStakeCard from './blazestake/page';
 
 interface PortfolioItem {
     name: string;
@@ -350,6 +351,7 @@ const Dashboard = () => {
                         )}
                     </div>
                 </div>
+                <BlazeStakeCard />
             </div>
         </div>
     );

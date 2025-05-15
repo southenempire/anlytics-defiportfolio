@@ -31,9 +31,8 @@ const Navbar = () => {
                 <div className="flex justify-between h-16 items-center">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <Link to="/" className="flex-shrink-0 flex items-center">
-                            <Shield className="text-purple-500 mr-2" size={20} />
-                            <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">KAMING</span>
+                        <Link to="/" className="flex-shrink-0 flex items-center p-2">
+                            <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">SAFRA</span>
                             <span className="text-xs bg-blue-600 text-gray-100 ml-2 px-2 py-0.5 rounded-full">Beta</span>
                         </Link>
                     </div>

@@ -4,9 +4,7 @@ import { LogOut, Mail, Wallet } from "lucide-react";
 
 export default function UserProfile() {
   const { user, signOut } = useUser();
-  const { publicKey } = useWallet();
-
-  if (!user) return null;
+  const { publicKey, disconnect } = useWallet();
 
   // Generate initials for avatar placeholder
   const getInitials = (email: string | undefined) => {
@@ -19,8 +17,14 @@ export default function UserProfile() {
 
   const handleLogout = async () => {
     try {
-      await signOut();
-      console.log("Logged out successfully");
+      if (user) {
+        await signOut();
+        console.log("Logged out successfully");
+      }
+      if (publicKey) {
+        await disconnect();
+        console.log("Wallet disconnected successfully");
+      }
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -33,13 +37,15 @@ export default function UserProfile() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-lg font-semibold text-white">
-              {getInitials(user.email)}
+              {user ? getInitials(user.email) : "W"}
             </div>
             <div>
               <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
-                User Profile
+                {user ? "User Profile" : "Wallet Profile"}
               </h2>
-              <p className="text-xs text-gray-400">Manage your account details</p>
+              <p className="text-xs text-gray-400">
+                {user ? "Manage your account details" : "View your wallet details"}
+              </p>
             </div>
           </div>
           <button
@@ -47,28 +53,30 @@ export default function UserProfile() {
             className="py-2 px-4 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
           >
             <LogOut size={16} />
-            <span>Log Out</span>
+            <span>{user ? "Log Out" : "Disconnect"}</span>
           </button>
         </div>
 
         {/* Details Section */}
         <div className="bg-gray-700/50 rounded-lg p-6 border border-gray-700">
           <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center gap-2">
-            <span>Account Information</span>
+            <span>{user ? "Account Information" : "Wallet Information"}</span>
           </h3>
           <div className="space-y-4">
-            {/* Email */}
-            <div className="flex items-start gap-3">
-              <Mail size={18} className="text-gray-400 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-xs text-gray-400">Email</p>
-                <p className="text-gray-200 font-medium">
-                  {user.email || <span className="text-gray-400 italic">Not provided</span>}
-                </p>
+            {/* Email - Only show if user is authenticated with email */}
+            {user && (
+              <div className="flex items-start gap-3">
+                <Mail size={18} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-xs text-gray-400">Email</p>
+                  <p className="text-gray-200 font-medium">
+                    {user.email || <span className="text-gray-400 italic">Not provided</span>}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Wallet Address */}
+            {/* Wallet Address - Show for both email and wallet-only users */}
             {publicKey && (
               <div className="flex items-start gap-3">
                 <Wallet size={18} className="text-gray-400 mt-0.5 flex-shrink-0" />

@@ -16,15 +16,45 @@ import '@solana/wallet-adapter-react-ui/styles.css';
 import UserProfile from './component/Profile';
 import WalletPortfolio from './component/watchwallet/page';
 import UrlVerifier from './component/Dapps/page';
+import { useWallet } from '@solana/wallet-adapter-react';
+import LandingPage from './component/landingpage/page';
+import { useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 (window as any).Buffer = Buffer;
 
+function WalletToast() {
+  const { connected, publicKey } = useWallet();
+
+  useEffect(() => {
+    if (connected && publicKey) {
+      toast.success(`Connected to ${publicKey.toString().slice(0, 4)}...${publicKey.toString().slice(-4)}`, {
+        duration: 5000,
+        position: 'top-right',
+        style: {
+          background: '#1F2937',
+          color: '#fff',
+          border: '1px solid #374151',
+          padding: '16px',
+          fontSize: '16px',
+          maxWidth: '400px',
+        },
+        icon: '🔗',
+      });
+    }
+  }, [connected, publicKey]);
+
+  return null;
+}
+
 function ProtectedRoute() {
   const { user } = useUser();
+  const { connected } = useWallet();
   const location = useLocation();
 
-  if (!user) {
-    return <Navigate to="/" replace state={{ from: location }} />;
+  // Allow access if either email is authenticated or wallet is connected
+  if (!user && !connected) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   return <Outlet />;
@@ -32,12 +62,14 @@ function ProtectedRoute() {
 
 function Layout() {
   const location = useLocation();
+  const hideNavbarPaths = ['/', '/login'];
 
   return (
     <div className="min-h-screen bg-white">
-      {location.pathname !== '/' && <Navbar />}
+      {!hideNavbarPaths.includes(location.pathname) && <Navbar />}
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
         
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
@@ -74,6 +106,8 @@ function App() {
         }}
       >
         <Router>
+          <Toaster />
+          <WalletToast />
           <Layout />
         </Router>
       </CivicAuthProvider>
